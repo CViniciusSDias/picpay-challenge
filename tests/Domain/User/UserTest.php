@@ -62,4 +62,19 @@ class UserTest extends TestCase
         // Act
         $user1->transferTo($user2, 1_00);
     }
+
+    #[Test]
+    public function trying_to_transfer_from_a_merchant_should_throw_an_exception(): void
+    {
+        // Assert
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Lojistas não podem enviar dinheiro. Apenas receber.');
+
+        // Arrange
+        $user1 = new CommonUser('Full name', new CPF('12345678910'), 'common@example.org', 'plain password');
+        $user2 = new MerchantUser('Full name', new CNPJ('12345678000190'), 'merchant@example.org', 'plain password');
+
+        // Act
+        $user2->transferTo($user1, 1_00);
+    }
 }

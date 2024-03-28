@@ -19,6 +19,8 @@ abstract class User
         $this->balance = 0;
     }
 
+    abstract public function transferTo(User $user, int $amount): void;
+
     public function deposit(int $amount): void
     {
         if ($amount < 0) {
