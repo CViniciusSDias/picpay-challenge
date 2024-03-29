@@ -3,21 +3,22 @@
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <entity name="App\Domain\User\User" inheritance-type="SINGLE_TABLE" table="users">
+    <entity name="App\Domain\User\User" inheritance-type="SINGLE_TABLE" table="users" repository-class="App\Infra\User\DoctrineUserRepository">
         <discriminator-column name="user_type" type="string"/>
         <discriminator-map>
             <discriminator-mapping value="merchant" class="App\Domain\User\MerchantUser"/>
             <discriminator-mapping value="common" class="App\Domain\User\CommonUser"/>
         </discriminator-map>
 
-        <id name="surrogateId" type="ulid" column="id">
+        <id name="id" type="ulid" column="id">
             <generator strategy="CUSTOM"/>
             <custom-id-generator class="Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator"/>
         </id>
 
         <field name="fullName" />
-        <embedded name="document" class="App\Domain\User\Document\Document" use-column-prefix="false"/>
+        <field name="document" type="document" unique="true" />
         <field name="email" unique="true" />
         <field name="password" />
+        <field name="balance" type="integer" />
     </entity>
 </doctrine-mapping>

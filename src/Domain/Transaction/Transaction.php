@@ -10,7 +10,10 @@ use Symfony\Component\Uid\Ulid;
 
 readonly class Transaction
 {
-    private Ulid $surrogateId;
+    /**
+     * @var Ulid Surrogate ID used for persistence
+     */
+    public readonly Ulid $id;
     public \DateTimeImmutable $createdAt;
 
     public function __construct(
@@ -18,5 +21,6 @@ readonly class Transaction
         public User $receiver,
         public int $valueInCents
     ) {
+        $this->createdAt = new \DateTimeImmutable();
     }
 }

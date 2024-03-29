@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Transaction;
 
+use App\Domain\Transaction\Transaction;
 use App\Domain\Transaction\TransactionRepository;
 use App\Domain\User\UserRepository;
 
@@ -17,11 +18,15 @@ class PerformTransaction
     ) {
     }
 
-    public function execute(PerformTransactionDTO $data): void
+    public function execute(PerformTransactionDTO $data): Transaction
     {
         $users = $this->userRepository->findUsersByIds([$data->payer, $data->payee]);
-        $sender = $users[$data->payer];
-        $receiver = $users[$data->payee];
+        $sender = $users[$data->payer] ?? null;
+        $receiver = $users[$data->payee] ?? null;
+
+        if ($sender === null || $receiver === null) {
+            throw new \DomainException('ID(s) de usuário(s) inválido(s)');
+        }
 
         $transferAmountInCents = is_int($data->value)
             ? $data->value
@@ -36,5 +41,7 @@ class PerformTransaction
         $this->userRepository->save($receiver);
         $this->transactionRepository->add($transaction);
         $this->userTransactionNotifier->notify($transaction);
+
+        return $transaction;
     }
 }

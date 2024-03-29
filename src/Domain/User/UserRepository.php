@@ -8,7 +8,7 @@ interface UserRepository
 {
 
     /**
-     * @param int[] $ids
+     * @param string[] $ids ULIDs as strings
      * @return array<int, User>
      */
     public function findUsersByIds(array $ids): array;

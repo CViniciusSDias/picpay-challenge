@@ -10,7 +10,11 @@ use Symfony\Component\Uid\Ulid;
 
 abstract class User
 {
-    private Ulid $surrogateId;
+    /**
+     * @var Ulid Surrogate ID used for persistence
+     */
+    public readonly Ulid $id;
+
     protected int $balance;
 
     public function __construct(
