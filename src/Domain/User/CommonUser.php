@@ -13,13 +13,13 @@ class CommonUser extends User
         parent::__construct($fullName, $document, $email, $password);
     }
 
-    public function transferTo(User $user, int $amount): void
+    public function transferTo(User $user, int $valueInCents): void
     {
-        if ($amount > $this->balance) {
+        if ($valueInCents > $this->balance) {
             throw new \DomainException('Saldo insuficiente');
         }
 
-        $user->deposit($amount);
-        $this->balance -= $amount;
+        $user->deposit($valueInCents);
+        $this->balance -= $valueInCents;
     }
 }

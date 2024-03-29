@@ -19,7 +19,7 @@ abstract class User
         $this->balance = 0;
     }
 
-    abstract public function transferTo(User $user, int $amount): void;
+    abstract public function transferTo(User $user, int $valueInCents): void;
 
     public function deposit(int $amount): void
     {

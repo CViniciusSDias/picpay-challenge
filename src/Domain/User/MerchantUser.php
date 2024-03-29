@@ -13,7 +13,7 @@ class MerchantUser extends User
         parent::__construct($fullName, $document, $email, $password);
     }
 
-    public function transferTo(User $user, int $amount): void
+    public function transferTo(User $user, int $valueInCents): void
     {
         throw new \DomainException('Lojistas não podem enviar dinheiro. Apenas receber.');
     }
