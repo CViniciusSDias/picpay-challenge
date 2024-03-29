@@ -1,0 +1,29 @@
+version: '3'
+services:
+    app: &app_service
+        build: .
+        volumes:
+            - ./:/app
+        environment:
+            DATABASE_URL: "postgresql://db_user:fake_password@db:5432/picpay?serverVersion=16&charset=utf8"
+            APP_ENV: dev
+    web:
+        image: nginx:1.25-alpine
+        volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf
+        ports:
+            - "8123:80"
+    db:
+        image: postgres:16-alpine
+        environment:
+            POSTGRES_DB: picpay
+            POSTGRES_PASSWORD: fake_password
+            POSTGRES_USER: db_user
+        volumes:
+            - database_data:/var/lib/postgresql/data:rw
+    migrations:
+        <<: *app_service
+        command: ["php", "bin/console", "doctrine:migrations:migrate", "--no-interaction"]
+        restart: on-failure
+volumes:
+    database_data:
