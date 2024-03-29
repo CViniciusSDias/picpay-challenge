@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\User;
 
+use App\Domain\Transaction\Transaction;
 use App\Domain\User\Document\CPF;
 
 class CommonUser extends User
@@ -13,7 +14,7 @@ class CommonUser extends User
         parent::__construct($fullName, $document, $email, $password);
     }
 
-    public function transferTo(User $user, int $valueInCents): void
+    public function transferTo(User $user, int $valueInCents): Transaction
     {
         if ($valueInCents > $this->balance) {
             throw new \DomainException('Saldo insuficiente');
@@ -21,5 +22,7 @@ class CommonUser extends User
 
         $user->deposit($valueInCents);
         $this->balance -= $valueInCents;
+
+        return new Transaction($this, $user, $valueInCents);
     }
 }

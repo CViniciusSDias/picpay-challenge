@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infra\Transaction;
 
 use App\Application\Transaction\TransactionChecker;
+use App\Domain\Transaction\Transaction;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -14,7 +15,7 @@ readonly class TransactionCheckerFromMocky implements TransactionChecker
     {
     }
 
-    public function validate(): bool
+    public function authorize(Transaction $transaction): bool
     {
         $response = $this->httpClient->request('GET', $this->parameterBag->get('transfer_validation.url'));
         $decodedBody = json_decode($response->getContent(), true);

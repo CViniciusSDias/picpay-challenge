@@ -6,7 +6,7 @@ namespace App\Application\Transaction;
 
 use App\Domain\Transaction\Transaction;
 
-interface TransactionChecker
+interface UserTransactionNotifier
 {
-    public function authorize(Transaction $transaction): bool;
+    public function notify(Transaction $transaction): void;
 }

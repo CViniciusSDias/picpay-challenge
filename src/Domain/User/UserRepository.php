@@ -12,4 +12,6 @@ interface UserRepository
      * @return array<int, User>
      */
     public function findUsersByIds(array $ids): array;
+
+    public function save(User $user): void;
 }
