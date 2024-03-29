@@ -6,7 +6,7 @@ namespace App\Application;
 
 readonly class PerformTransactionDTO
 {
-    public function __construct(public float $value, public int $payer, public int $payee)
+    public function __construct(public float $value, public int $payer, public int|float $payee)
     {
     }
 }
