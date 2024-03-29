@@ -7,6 +7,7 @@ namespace App\Infra\User;
 use App\Domain\User\User;
 use App\Domain\User\UserRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\LockMode;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Types\UlidType;
 use Symfony\Component\Uid\Ulid;
@@ -33,6 +34,7 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
         /** @var User[] $users */
         $users = $queryBuilder
             ->getQuery()
+            ->setLockMode(LockMode::PESSIMISTIC_WRITE)
             ->getResult();
 
         $return = [];

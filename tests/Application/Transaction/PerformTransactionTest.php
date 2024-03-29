@@ -21,6 +21,20 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(PerformTransaction::class), CoversClass(PerformTransactionDTO::class)]
 class PerformTransactionTest extends TestCase
 {
+    private static TransactionalSession $fakeTransactionalSession;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::$fakeTransactionalSession = new class implements TransactionalSession {
+            public function executeAtomically(callable $operation): mixed
+            {
+                return $operation();
+            }
+        };
+    }
+
     #[Test]
     public function if_the_external_service_denies_the_transaction_an_exception_should_be_thrown(): void
     {
@@ -46,11 +60,7 @@ class PerformTransactionTest extends TestCase
         $userTransactionNotifier->expects($this->never())
             ->method('notify');
 
-        $transactionalSession = $this->createMock(TransactionalSession::class);
-        $transactionalSession->expects($this->never())
-            ->method('executeAtomically');
-
-        $sut = new PerformTransaction($userRepository, $validateTransfer, $transactionRepository, $userTransactionNotifier, $transactionalSession);
+        $sut = new PerformTransaction($userRepository, $validateTransfer, $transactionRepository, $userTransactionNotifier, self::$fakeTransactionalSession);
 
         $sut->execute(new PerformTransactionDTO(1, '0', '1'));
     }
@@ -80,14 +90,7 @@ class PerformTransactionTest extends TestCase
         $userTransactionNotifier->expects($this->once())
             ->method('notify');
 
-        $fakeTransactionalSession = new class implements TransactionalSession {
-            public function executeAtomically(callable $operation): void
-            {
-                $operation();
-            }
-        };
-
-        $sut = new PerformTransaction($userRepository, $validateTransfer, $transactionRepository, $userTransactionNotifier, $fakeTransactionalSession);
+        $sut = new PerformTransaction($userRepository, $validateTransfer, $transactionRepository, $userTransactionNotifier, self::$fakeTransactionalSession);
         $sut->execute(new PerformTransactionDTO(1, '0', '1'));
     }
 
@@ -117,14 +120,7 @@ class PerformTransactionTest extends TestCase
         $userTransactionNotifier->expects($this->once())
             ->method('notify');
 
-        $fakeTransactionalSession = new class implements TransactionalSession {
-            public function executeAtomically(callable $operation): void
-            {
-                $operation();
-            }
-        };
-
-        $sut = new PerformTransaction($userRepository, $validateTransfer, $transactionRepository, $userTransactionNotifier, $fakeTransactionalSession);
+        $sut = new PerformTransaction($userRepository, $validateTransfer, $transactionRepository, $userTransactionNotifier, self::$fakeTransactionalSession);
 
         $sut->execute(new PerformTransactionDTO(1.00, '0', '1'));
     }

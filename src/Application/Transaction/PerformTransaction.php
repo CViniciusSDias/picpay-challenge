@@ -22,29 +22,31 @@ class PerformTransaction
 
     public function execute(PerformTransactionDTO $data): Transaction
     {
-        $users = $this->userRepository->findUsersByIds([$data->payer, $data->payee]);
-        $sender = $users[$data->payer] ?? null;
-        $receiver = $users[$data->payee] ?? null;
+        $transaction = $this->transactionalSession->executeAtomically(function () use ($data): Transaction {
+            $users = $this->userRepository->findUsersByIds([$data->payer, $data->payee]);
+            $sender = $users[$data->payer] ?? null;
+            $receiver = $users[$data->payee] ?? null;
 
-        if ($sender === null || $receiver === null) {
-            throw new \DomainException('ID(s) de usuário(s) inválido(s)');
-        }
+            if ($sender === null || $receiver === null) {
+                throw new \DomainException('ID(s) de usuário(s) inválido(s)');
+            }
 
-        $transferAmountInCents = is_int($data->value)
-            ? $data->value
-            : intval($data->value * 100);
-        $transaction = $sender->transferTo($receiver, $transferAmountInCents);
+            $transferAmountInCents = is_int($data->value)
+                ? $data->value
+                : intval($data->value * 100);
+            $transaction = $sender->transferTo($receiver, $transferAmountInCents);
 
-        if (!$this->validateTransfer->authorize($transaction)) {
-            throw new \DomainException('Transação não autorizada pelo serviço externo. Operação cancelada.');
-        }
+            if (!$this->validateTransfer->authorize($transaction)) {
+                throw new \DomainException('Transação não autorizada pelo serviço externo. Operação cancelada.');
+            }
 
-        $this->transactionalSession->executeAtomically(function () use ($transaction, $receiver, $sender) {
             $this->userRepository->save($sender);
             $this->userRepository->save($receiver);
             $this->transactionRepository->add($transaction);
-            $this->userTransactionNotifier->notify($transaction);
+
+            return $transaction;
         });
+        $this->userTransactionNotifier->notify($transaction);
 
         return $transaction;
     }
