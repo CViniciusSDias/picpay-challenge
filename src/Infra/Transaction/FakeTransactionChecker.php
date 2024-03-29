@@ -20,7 +20,7 @@ readonly class FakeTransactionChecker implements TransactionChecker
     }
 
     public function authorize(Transaction $transaction): bool
-	{
-		return rand(1, 100) <= $this->proportion;
-	}
+    {
+        return rand(1, 100) <= $this->proportion;
+    }
 }
