@@ -4,6 +4,10 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    transfer_validation:
+        url: https://run.mocky.io/v3/5794d450-d2e2-4412-8131-73d0293ac1cc
+    notification_sender:
+        url: https://run.mocky.io/v3/54dc2cf1-3add-45b5-b5a9-6bf7e7f1f4a6
 
 services:
     # default configuration for services in *this* file
@@ -17,7 +21,7 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Entity/'
+            - '../src/Domain/'
             - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
