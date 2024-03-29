@@ -27,6 +27,7 @@ final class Version20240329015326 extends AbstractMigration
         $table->addColumn('email', 'string');
         $table->addColumn('password', 'string');
         $table->addColumn('document', 'string');
+        $table->addColumn('balance', 'integer');
         $table->addColumn('user_type', 'string');
 
         $table->setPrimaryKey(['id'])
