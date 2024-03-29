@@ -2,7 +2,6 @@
 
 namespace App\Tests\Infra\Controller;
 
-use App\Application\Persistence\TransactionalSession;
 use App\Application\Transaction\TransactionChecker;
 use App\Domain\Transaction\Transaction;
 use App\Domain\User\CommonUser;
@@ -12,58 +11,54 @@ use App\Domain\User\MerchantUser;
 use App\Domain\User\User;
 use App\Domain\User\UserRepository;
 use App\Infra\Controller\TransactionController;
+use App\Infra\Persistence\DoctrineTransactionalSession;
+use App\Infra\Persistence\DocumentType;
+use App\Infra\Transaction\DoctrineTransactionRepository;
+use App\Infra\User\DoctrineUserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Constraint\Constraint;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Uid\Ulid;
 
-#[CoversClass(TransactionController::class)]
+#[
+    CoversClass(TransactionController::class),
+    CoversClass(DoctrineTransactionalSession::class),
+    CoversClass(DoctrineTransactionRepository::class),
+    CoversClass(DoctrineUserRepository::class),
+    CoversClass(DocumentType::class),
+]
 class TransactionControllerTest extends WebTestCase
 {
-    private static KernelBrowser $client;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        static::$client = static::createClient();
-
-        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
-        $metaData = $entityManager->getMetadataFactory()->getAllMetadata();
-        $schemaTool = new SchemaTool($entityManager);
-        $schemaTool->updateSchema($metaData);
-    }
-
     #[Test]
     public function performing_a_transaction_must_change_the_users_balances(): void
     {
         // Arrange
+        $kernelBrowser = static::createClient();
+
         $commonUser = new CommonUser('Common user', new CPF('12345678910'), 'common@example.org', '12345678');
         $commonUser->deposit(300_00);
         $merchantUser = new MerchantUser('Merchant user', new CNPJ('12345678000190'), 'merchant@example.org', '123456');
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        /** @var UserRepository $userRepository */
+        $userRepository = $entityManager->getRepository(User::class);
 
-        /** @var TransactionalSession $transaction */
-        $transaction = static::getContainer()->get(TransactionalSession::class);
-        $transaction->executeAtomically(function () use ($merchantUser, $commonUser) {
-            /** @var UserRepository $userRepository */
-            $userRepository = static::getContainer()->get(EntityManagerInterface::class)->getRepository(User::class);
-            $userRepository->save($commonUser);
-            $userRepository->save($merchantUser);
-        });
+        $userRepository->save($commonUser);
+        $userRepository->save($merchantUser);
+        $entityManager->flush();
 
-        static::getContainer()->set(TransactionChecker::class, new class implements TransactionChecker
-        {
+        $fakeTransactionChecker = new class implements TransactionChecker {
             public function authorize(Transaction $transaction): bool
             {
                 return true;
             }
-        });
+        };
+        static::getContainer()->set(TransactionChecker::class, $fakeTransactionChecker);
 
         // Act
-        static::$client->jsonRequest('POST', '/transaction', [
+        $kernelBrowser->jsonRequest('POST', '/transaction', [
             "value" => 100_00,
             "payer" => $commonUser->id,
             "payee" => $merchantUser->id
@@ -71,9 +66,36 @@ class TransactionControllerTest extends WebTestCase
 
         // Assert
         $this->assertResponseIsSuccessful();
-        $userRepository = static::getContainer()->get(EntityManagerInterface::class)->getRepository(User::class);
         $users = $userRepository->findAll();
         self::assertSame(200_00, $users[0]->getBalance());
         self::assertSame(100_00, $users[1]->getBalance());
+    }
+
+    #[Test]
+    public function trying_to_access_endpoint_with_missing_data_must_respond_with_error(): void
+    {
+        // Arrange
+        $kernelBrowser = static::createClient();
+        // Act
+        $kernelBrowser->jsonRequest('POST', '/transaction');
+
+        // Assert
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    #[Test]
+    public function trying_to_access_endpoint_without_valid_users_must_respond_with_error(): void
+    {
+        // Arrange
+        $kernelBrowser = static::createClient();
+        // Act
+        $kernelBrowser->jsonRequest('POST', '/transaction', [
+            'value' => 100,
+            'payer' => new Ulid(),
+            'payee' => new Ulid(),
+        ]);
+
+        // Assert
+        $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
     }
 }

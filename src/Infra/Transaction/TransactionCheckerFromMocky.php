@@ -9,6 +9,9 @@ use App\Domain\Transaction\Transaction;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 readonly class TransactionCheckerFromMocky implements TransactionChecker
 {
     public function __construct(private HttpClientInterface $httpClient, private ParameterBagInterface $parameterBag)

@@ -8,6 +8,9 @@ use App\Application\Transaction\UserTransactionNotifier;
 use App\Domain\Transaction\Transaction;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class FakeUserTransactionNotifier implements UserTransactionNotifier
 {
     public function __construct(private LoggerInterface $logger)

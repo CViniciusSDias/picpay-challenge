@@ -7,6 +7,9 @@ namespace App\Infra\Transaction;
 use App\Application\Transaction\TransactionChecker;
 use App\Domain\Transaction\Transaction;
 
+/**
+ * @codeCoverageIgnore
+ */
 readonly class FakeTransactionChecker implements TransactionChecker
 {
     /**

@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * @internal Esse controller só serve para analisar os dados. Não faz parte real da aplicação / do desafio.
+ * @codeCoverageIgnore
  */
 class UserController extends AbstractController
 {

@@ -32,10 +32,6 @@ class DocumentType extends Type
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
-        if (!$value instanceof Document) {
-            throw new \Exception('Valor de documento desconhecido. Detalhes: ' . print_r($value, true));
-        }
-
         return $value->number;
     }
 }
