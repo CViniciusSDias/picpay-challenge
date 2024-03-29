@@ -41,6 +41,7 @@ class UserController extends AbstractController
 
         $user->deposit($request->initialBalance);
         $this->userRepository->save($user);
+        $this->entityManager->flush();
         return $this->json($user);
     }
 }

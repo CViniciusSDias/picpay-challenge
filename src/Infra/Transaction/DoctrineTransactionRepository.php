@@ -19,6 +19,5 @@ class DoctrineTransactionRepository extends ServiceEntityRepository implements T
     public function add(Transaction $transaction)
     {
         $this->getEntityManager()->persist($transaction);
-        $this->getEntityManager()->flush();
     }
 }

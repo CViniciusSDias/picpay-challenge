@@ -1,0 +1,43 @@
+### Transação válida
+
+POST http://localhost:8123/transaction
+Content-Type: application/json
+
+{
+    "value": 100.0,
+    "payer": "01HT47B2NBAKAR25MK8PD7GXSK",
+    "payee": "01HT47B8P45C0QMW27RKEBMJ0D"
+}
+
+### Usuário comum
+
+POST http://localhost:8123/users
+Content-Type: application/json
+
+{
+    "type": "common",
+    "fullName": "Usuário comum 1",
+    "documentNumber": "12345678910",
+    "email": "comum@example.org",
+    "password": "senha a ser ignorada",
+    "initialBalance": 30000
+}
+
+### Usuário lojista
+
+POST http://localhost:8123/users
+Content-Type: application/json
+
+{
+    "type": "merchant",
+    "fullName": "Usuário lojista 1",
+    "documentNumber": "12345678000190",
+    "email": "lojista@example.org",
+    "password": "senha a ser ignorada",
+    "initialBalance": 30000
+}
+
+### Listagem de usuários
+
+GET http://localhost:8123/users
+Accept: application/json

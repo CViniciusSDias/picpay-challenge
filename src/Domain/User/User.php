@@ -37,7 +37,7 @@ abstract class User
         $this->balance += $amount;
     }
 
-    public function balance(): int
+    public function getBalance(): int
     {
         return $this->balance;
     }

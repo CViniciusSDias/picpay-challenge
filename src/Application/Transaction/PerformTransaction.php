@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Transaction;
 
+use App\Application\Persistence\TransactionalSession;
 use App\Domain\Transaction\Transaction;
 use App\Domain\Transaction\TransactionRepository;
 use App\Domain\User\UserRepository;
@@ -15,6 +16,7 @@ class PerformTransaction
         private TransactionChecker $validateTransfer,
         private TransactionRepository $transactionRepository,
         private UserTransactionNotifier $userTransactionNotifier,
+        private TransactionalSession $transactionalSession,
     ) {
     }
 
@@ -37,10 +39,12 @@ class PerformTransaction
             throw new \DomainException('Transação não autorizada pelo serviço externo. Operação cancelada.');
         }
 
-        $this->userRepository->save($sender);
-        $this->userRepository->save($receiver);
-        $this->transactionRepository->add($transaction);
-        $this->userTransactionNotifier->notify($transaction);
+        $this->transactionalSession->executeAtomically(function () use ($transaction, $receiver, $sender) {
+            $this->userRepository->save($sender);
+            $this->userRepository->save($receiver);
+            $this->transactionRepository->add($transaction);
+            $this->userTransactionNotifier->notify($transaction);
+        });
 
         return $transaction;
     }

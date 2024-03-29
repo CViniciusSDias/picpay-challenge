@@ -30,8 +30,8 @@ class UserTest extends TestCase
         $transaction = $user1->transferTo($user2, 1_00);
 
         // Assert
-        self::assertSame(1_00, $user2->balance());
-        self::assertSame(4_00, $user1->balance());
+        self::assertSame(1_00, $user2->getBalance());
+        self::assertSame(4_00, $user1->getBalance());
         self::assertInstanceOf(Transaction::class, $transaction);
         self::assertSame(1_00, $transaction->valueInCents);
         self::assertSame($user1, $transaction->sender);
