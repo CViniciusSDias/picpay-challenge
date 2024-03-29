@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Application;
+namespace App\Application\Transaction;
 
 use App\Domain\User\UserRepository;
 
 class PerformTransaction
 {
-    public function __construct(private UserRepository $userRepository, private ValidateTransfer $validateTransfer)
+    public function __construct(private UserRepository $userRepository, private TransactionChecker $validateTransfer)
     {
     }
 
