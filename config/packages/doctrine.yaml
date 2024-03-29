@@ -17,11 +17,10 @@ doctrine:
         auto_mapping: true
         mappings:
             App:
-                type: attribute
+                type: xml
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Domain'
-                prefix: 'App\Entity'
-                alias: App
+                dir: '%kernel.project_dir%/src/Infra/Persistence/DoctrineMapping/'
+                prefix: 'App\Domain'
         controller_resolver:
             auto_mapping: false
 

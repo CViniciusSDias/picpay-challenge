@@ -6,9 +6,11 @@ namespace App\Domain\User;
 
 use App\Domain\Transaction\Transaction;
 use App\Domain\User\Document\Document;
+use Symfony\Component\Uid\Ulid;
 
 abstract class User
 {
+    private Ulid $surrogateId;
     protected int $balance;
 
     public function __construct(

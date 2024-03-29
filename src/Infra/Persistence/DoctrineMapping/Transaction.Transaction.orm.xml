@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="App\Domain\Transaction\Transaction" table="transactions">
+        <id name="surrogateId" type="ulid" column="id">
+            <generator strategy="CUSTOM"/>
+            <custom-id-generator class="Symfony\Bridge\Doctrine\IdGenerator\UlidGenerator"/>
+        </id>
+
+        <field name="valueInCents" type="integer" />
+        <field name="createdAt" type="datetime_immutable" />
+        <one-to-one field="sender" fetch="EAGER" target-entity="App\Domain\User\CommonUser" />
+        <one-to-one field="receiver" fetch="EAGER" target-entity="App\Domain\User\User" />
+    </entity>
+</doctrine-mapping>
