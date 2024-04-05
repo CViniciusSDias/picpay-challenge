@@ -43,10 +43,10 @@ class PerformTransaction
             $this->userRepository->save($sender);
             $this->userRepository->save($receiver);
             $this->transactionRepository->add($transaction);
+            $this->userTransactionNotifier->notify($receiver, $transaction);
 
             return $transaction;
         });
-        $this->userTransactionNotifier->notify($transaction);
 
         return $transaction;
     }

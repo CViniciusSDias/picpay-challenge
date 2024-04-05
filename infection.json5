@@ -1,0 +1,27 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "src"
+        ],
+        "excludes": [
+            "/Fake.*\\.php/",
+            "/Mocky.php/",
+            "Infra/Controller/UserController.php"
+        ]
+    },
+    "logs": {
+        "text": "infection.log",
+        "html": "infection.html",
+        "perMutator": "infection.md",
+        "summary": "infection.txt"
+    },
+    "mutators": {
+        "@default": true
+    },
+    "phpUnit": {
+        configDir: "/app",
+        customPath: "/app/bin/phpunit"
+    },
+    "bootstrap": "/app/tests/bootstrap.php"
+}

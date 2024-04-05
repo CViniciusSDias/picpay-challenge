@@ -21,3 +21,6 @@
 ###< phpunit/phpunit ###
 
 .idea
+
+infection.*
+!infection.json5

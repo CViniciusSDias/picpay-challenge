@@ -6,6 +6,7 @@ namespace App\Infra\Transaction;
 
 use App\Application\Transaction\UserTransactionNotifier;
 use App\Domain\Transaction\Transaction;
+use App\Domain\User\User;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -17,9 +18,8 @@ class FakeUserTransactionNotifier implements UserTransactionNotifier
     {
     }
 
-    public function notify(Transaction $transaction): void
+    public function notify(User $receiver, Transaction $transaction): void
     {
-        $this->logger->info('Notificação sobre transação', ['transaction' => $transaction]);
-        return;
+        $this->logger->info('Notificação sobre transação', compact('receiver', 'transaction'));
     }
 }

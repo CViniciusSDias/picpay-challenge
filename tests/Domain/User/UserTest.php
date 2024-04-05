@@ -38,6 +38,27 @@ class UserTest extends TestCase
         self::assertSame($user2, $transaction->receiver);
     }
 
+
+    #[Test]
+    public function common_user_can_transfer_all_of_their_money(): void
+    {
+        // Arrange
+        $user1 = new CommonUser('Full name', new CPF('12345678910'), 'common@example.org', 'plain password');
+        $user1->deposit(5_00);
+        $user2 = new MerchantUser('Full name', new CNPJ('12345678000190'), 'merchant@example.org', 'plain password');
+
+        // Act
+        $transaction = $user1->transferTo($user2, 5_00);
+
+        // Assert
+        self::assertSame(5_00, $user2->getBalance());
+        self::assertSame(0, $user1->getBalance());
+        self::assertInstanceOf(Transaction::class, $transaction);
+        self::assertSame(5_00, $transaction->valueInCents);
+        self::assertSame($user1, $transaction->sender);
+        self::assertSame($user2, $transaction->receiver);
+    }
+
     #[Test]
     public function transfer_of_negative_value_should_throw_an_exception(): void
     {
@@ -81,5 +102,35 @@ class UserTest extends TestCase
 
         // Act
         $user2->transferTo($user1, 1_00);
+    }
+
+    #[Test]
+    public function trying_to_deposit_a_negative_amount_should_throw_an_exception(): void
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Valor deve ser positivo');
+
+        $user = new CommonUser('Full name', new CPF('12345678910'), 'common@example.org', 'plain');
+        $user->deposit(-1);
+    }
+
+    #[Test]
+    public function adding_a_deposit_should_sum_to_the_balance(): void
+    {
+        $user = new CommonUser('Full name', new CPF('12345678910'), 'common@example.org', 'plain');
+        $user->deposit(1);
+        $user->deposit(1);
+
+        self::assertSame(2, $user->getBalance());
+    }
+
+    #[Test]
+    public function adding_a_deposit_of_zero_should_not_change_the_balance(): void
+    {
+        $user = new CommonUser('Full name', new CPF('12345678910'), 'common@example.org', 'plain');
+        $user->deposit(1);
+        $user->deposit(0);
+
+        self::assertSame(1, $user->getBalance());
     }
 }

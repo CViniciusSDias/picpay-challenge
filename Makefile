@@ -1,3 +1,5 @@
+.PHONY: start test stop
+
 start:
 	docker compose up -d
 test:

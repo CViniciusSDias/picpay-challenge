@@ -76,6 +76,7 @@ class TransactionControllerTest extends WebTestCase
     {
         // Arrange
         $kernelBrowser = static::createClient();
+
         // Act
         $kernelBrowser->jsonRequest('POST', '/transaction');
 
@@ -88,6 +89,7 @@ class TransactionControllerTest extends WebTestCase
     {
         // Arrange
         $kernelBrowser = static::createClient();
+
         // Act
         $kernelBrowser->jsonRequest('POST', '/transaction', [
             'value' => 100,
