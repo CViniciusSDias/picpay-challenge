@@ -4,6 +4,7 @@ namespace App\Tests\Infra\Controller;
 
 use App\Application\Transaction\TransactionChecker;
 use App\Domain\Transaction\Transaction;
+use App\Domain\Transaction\TransactionRepository;
 use App\Domain\User\CommonUser;
 use App\Domain\User\Document\CNPJ;
 use App\Domain\User\Document\CPF;
@@ -44,6 +45,7 @@ class TransactionControllerTest extends WebTestCase
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
         /** @var UserRepository $userRepository */
         $userRepository = $entityManager->getRepository(User::class);
+        $transactionRepository = $entityManager->getRepository(Transaction::class);
 
         $userRepository->save($commonUser);
         $userRepository->save($merchantUser);
@@ -67,8 +69,14 @@ class TransactionControllerTest extends WebTestCase
         // Assert
         $this->assertResponseIsSuccessful();
         $users = $userRepository->findAll();
+        $transactions = $transactionRepository->findBy([
+            'sender' => $commonUser,
+            'receiver' => $merchantUser,
+            'valueInCents' => 100_00
+        ]);
         self::assertSame(200_00, $users[0]->getBalance());
         self::assertSame(100_00, $users[1]->getBalance());
+        self::assertCount(1, $transactions);
     }
 
     #[Test]
@@ -91,7 +99,7 @@ class TransactionControllerTest extends WebTestCase
         $kernelBrowser = static::createClient();
 
         // Act
-        $kernelBrowser->jsonRequest('POST', '/transaction', [
+        $crawler = $kernelBrowser->jsonRequest('POST', '/transaction', [
             'value' => 100,
             'payer' => new Ulid(),
             'payee' => new Ulid(),
