@@ -4,7 +4,6 @@ namespace App\Tests\Infra\Controller;
 
 use App\Application\Transaction\TransactionChecker;
 use App\Domain\Transaction\Transaction;
-use App\Domain\Transaction\TransactionRepository;
 use App\Domain\User\CommonUser;
 use App\Domain\User\Document\CNPJ;
 use App\Domain\User\Document\CPF;
