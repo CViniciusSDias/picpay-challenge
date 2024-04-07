@@ -74,6 +74,9 @@ class TransactionControllerTest extends WebTestCase
             'receiver' => $merchantUser,
             'valueInCents' => 100_00
         ]);
+        $responseBody = json_decode($kernelBrowser->getResponse()->getContent(), true);
+        self::assertSame('ok', $responseBody['status']);
+        self::assertArrayHasKey('data', $responseBody);
         self::assertSame(200_00, $users[0]->getBalance());
         self::assertSame(100_00, $users[1]->getBalance());
         self::assertCount(1, $transactions);
@@ -99,7 +102,7 @@ class TransactionControllerTest extends WebTestCase
         $kernelBrowser = static::createClient();
 
         // Act
-        $crawler = $kernelBrowser->jsonRequest('POST', '/transaction', [
+        $kernelBrowser->jsonRequest('POST', '/transaction', [
             'value' => 100,
             'payer' => new Ulid(),
             'payee' => new Ulid(),
@@ -107,5 +110,10 @@ class TransactionControllerTest extends WebTestCase
 
         // Assert
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
+        $responseBody = $kernelBrowser->getResponse()->getContent();
+        self::assertJson($responseBody);
+        $parsedBody = json_decode($responseBody, true);
+        self::assertSame('error', $parsedBody['status']);
+        self::assertSame('ID(s) de usuário(s) inválido(s)', $parsedBody['message']);
     }
 }
