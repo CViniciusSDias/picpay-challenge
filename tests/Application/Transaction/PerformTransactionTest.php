@@ -66,6 +66,28 @@ class PerformTransactionTest extends TestCase
     }
 
     #[Test]
+    public function if_one_of_the_users_is_not_found_an_exception_should_be_thrown()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('ID(s) de usuário(s) inválido(s)');
+
+        $commonUser = new CommonUser('Full name', new CPF('12345678910'), 'common@example.org', '123456');
+        $userRepository = $this->createStub(UserRepository::class);
+        $userRepository->method('findUsersByIds')
+            ->willReturn([1 => $commonUser]);
+
+        $sut = new PerformTransaction(
+            $userRepository,
+            $this->createStub(TransactionChecker::class),
+            $this->createStub(TransactionRepository::class),
+            $this->createStub(UserTransactionNotifier::class),
+            self::$fakeTransactionalSession
+        );
+
+        $sut->execute(new PerformTransactionDTO(100_00, '1', '2'));
+    }
+
+    #[Test]
     public function performing_a_transaction_should_store_the_data_and_notify_the_user(): void
     {
         $user1 = new CommonUser('Test Name', new CPF('12345678910'), 'email@example.org', '123456');
