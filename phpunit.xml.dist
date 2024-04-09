@@ -10,6 +10,8 @@
          failOnRisky="true"
          failOnWarning="true">
     <php>
+        <env name="APP_ENV" value="test" force="true" />
+        <env name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/test_data.db" force="true" />
         <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
