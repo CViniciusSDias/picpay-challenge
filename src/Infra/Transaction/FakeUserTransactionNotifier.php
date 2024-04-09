@@ -20,6 +20,7 @@ class FakeUserTransactionNotifier implements UserTransactionNotifier
 
     public function notify(User $receiver, Transaction $transaction): void
     {
+        // TODO: Enviar notificação de forma assíncrona
         $this->logger->info('Notificação sobre transação', compact('receiver', 'transaction'));
     }
 }
