@@ -7,12 +7,19 @@ services:
         environment:
             DATABASE_URL: "postgresql://db_user:fake_password@db:5432/picpay?serverVersion=16&charset=utf8"
             APP_ENV: dev
+            APP_RUNTIME: "Runtime\\Swoole\\Runtime"
+            SWOOLE_HOST: "0.0.0.0"
+            SWOOLE_PORT: "8000"
+        depends_on:
+            - db
     web:
         image: nginx:1.25-alpine
         volumes:
             - ./nginx.conf:/etc/nginx/conf.d/default.conf
         ports:
             - "8123:80"
+        depends_on:
+            - app
     db:
         image: postgres:16-alpine
         environment:
