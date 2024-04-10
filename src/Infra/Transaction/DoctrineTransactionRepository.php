@@ -9,6 +9,9 @@ use App\Domain\Transaction\TransactionRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @template-extends ServiceEntityRepository<Transaction>
+ */
 class DoctrineTransactionRepository extends ServiceEntityRepository implements TransactionRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,7 +19,7 @@ class DoctrineTransactionRepository extends ServiceEntityRepository implements T
         parent::__construct($registry, Transaction::class);
     }
 
-    public function add(Transaction $transaction)
+    public function add(Transaction $transaction): void
     {
         $this->getEntityManager()->persist($transaction);
     }

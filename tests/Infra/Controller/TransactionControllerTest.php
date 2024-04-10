@@ -43,7 +43,7 @@ class TransactionControllerTest extends WebTestCase
         $merchantUser = new MerchantUser('Merchant user', new CNPJ('12345678000190'), 'merchant@example.org', '123456');
         /** @var EntityManagerInterface $entityManager */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
-        /** @var UserRepository&EntityRepository $userRepository */
+        /** @var UserRepository&EntityRepository<User> $userRepository */
         $userRepository = $entityManager->getRepository(User::class);
         $transactionRepository = $entityManager->getRepository(Transaction::class);
 

@@ -66,7 +66,7 @@ class PerformTransactionTest extends TestCase
     }
 
     #[Test]
-    public function if_one_of_the_users_is_not_found_an_exception_should_be_thrown()
+    public function if_one_of_the_users_is_not_found_an_exception_should_be_thrown(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('ID(s) de usuário(s) inválido(s)');

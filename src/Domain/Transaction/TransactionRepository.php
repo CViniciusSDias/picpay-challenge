@@ -6,5 +6,5 @@ namespace App\Domain\Transaction;
 
 interface TransactionRepository
 {
-    public function add(Transaction $transaction);
+    public function add(Transaction $transaction): void;
 }

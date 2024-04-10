@@ -35,6 +35,9 @@ class DocumentTest extends TestCase
         new CNPJ($number);
     }
 
+    /**
+     * @return iterable<iterable<string>>
+     */
     public static function invalidCpfs(): iterable
     {
         return [
@@ -45,6 +48,9 @@ class DocumentTest extends TestCase
         ];
     }
 
+    /**
+     * @return iterable<iterable<string>>
+     */
     public static function invalidCnpjs(): iterable
     {
         return [
