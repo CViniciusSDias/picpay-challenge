@@ -1,4 +1,4 @@
-.PHONY: start test stop
+.PHONY: start test stop stan
 
 start:
 	docker compose up -d
@@ -10,3 +10,5 @@ stop:
 	docker compose down
 infection: migrate-test
 	docker compose exec app php vendor/bin/infection
+stan:
+	docker compose exec app php vendor/bin/phpstan analyse

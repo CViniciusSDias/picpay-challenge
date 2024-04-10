@@ -1,0 +1,14 @@
+parameters:
+    level: 1
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+
+    ignoreErrors:
+        - /has an uninitialized readonly property \$id. Assign it in the constructor\.$/
+
+    excludePaths:
+        - ./src/Infra/Controller/UserController.php

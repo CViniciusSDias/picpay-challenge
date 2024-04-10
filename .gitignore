@@ -24,3 +24,7 @@
 
 infection.*
 !infection.json5
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
