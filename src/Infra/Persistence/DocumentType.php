@@ -22,6 +22,9 @@ class DocumentType extends Type
         return 'document';
     }
 
+    /**
+     * @throws \UnhandledMatchError If value isn't a string or has an unknown length
+     */
     public function convertToPHPValue($value, AbstractPlatform $platform): Document
     {
         return match (strlen($value)) {
