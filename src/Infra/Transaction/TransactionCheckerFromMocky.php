@@ -23,6 +23,10 @@ readonly class TransactionCheckerFromMocky implements TransactionChecker
         /** @var string $transactionValidationUrl */
         $transactionValidationUrl = $this->parameterBag->get('transfer_validation.url');
         $response = $this->httpClient->request('GET', $transactionValidationUrl);
+        /**
+         * @var array{Autorizado: bool} $decodedBody
+         * @TODO: Verificar item correto caso use a API real
+         */
         $decodedBody = json_decode($response->getContent(), true);
 
         return $decodedBody['Autorizado'] === true;

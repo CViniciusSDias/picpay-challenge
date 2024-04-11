@@ -75,6 +75,7 @@ class TransactionControllerTest extends WebTestCase
             'valueInCents' => 100_00
         ]);
         $responseContent = (string) $kernelBrowser->getResponse()->getContent();
+        /** @var array{status: string, data: string} $responseBody */
         $responseBody = json_decode($responseContent, true);
         self::assertSame('ok', $responseBody['status']);
         self::assertArrayHasKey('data', $responseBody);
@@ -113,6 +114,7 @@ class TransactionControllerTest extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $responseBody = (string) $kernelBrowser->getResponse()->getContent();
         self::assertJson($responseBody);
+        /** @var array{status: string, message: string} $parsedBody */
         $parsedBody = json_decode($responseBody, true);
         self::assertSame('error', $parsedBody['status']);
         self::assertSame('ID(s) de usuário(s) inválido(s)', $parsedBody['message']);
