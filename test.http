@@ -1,6 +1,6 @@
 ### Transação válida
 
-POST http://localhost:8123/transaction
+POST {{ url }}/transaction
 Content-Type: application/json
 
 {
@@ -11,7 +11,7 @@ Content-Type: application/json
 
 ### Usuário comum
 
-POST http://localhost:8123/users
+POST {{ url }}/users
 Content-Type: application/json
 
 {
@@ -25,7 +25,7 @@ Content-Type: application/json
 
 ### Usuário lojista
 
-POST http://localhost:8123/users
+POST {{ url }}/users
 Content-Type: application/json
 
 {
@@ -39,5 +39,5 @@ Content-Type: application/json
 
 ### Listagem de usuários
 
-GET http://localhost:8123/users
+GET {{ url }}/users
 Accept: application/json
