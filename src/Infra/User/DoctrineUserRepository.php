@@ -22,13 +22,16 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
         parent::__construct($registry, User::class);
     }
 
+    /**
+     * @param string[] $ids List of ULIDs as strings
+     * @return array<string, User> User list with the ULID (as string) being the key
+     */
     public function findUsersByIds(array $ids): array
     {
-        $ulids = array_map(fn (string $id) => new Ulid($id), $ids);
         $queryBuilder = $this->createQueryBuilder('user')
             ->select('user');
 
-        foreach ($ulids as $i => $ulid) {
+        foreach ($ids as $i => $ulid) {
             $paramIndex = $i + 1;
             $queryBuilder->orWhere('user.id = ?' . $paramIndex);
             $queryBuilder->setParameter($paramIndex, $ulid, UlidType::NAME);

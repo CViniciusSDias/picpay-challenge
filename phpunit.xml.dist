@@ -8,7 +8,9 @@
          beStrictAboutCoverageMetadata="false"
          beStrictAboutOutputDuringTests="true"
          failOnRisky="true"
-         failOnWarning="true">
+         failOnWarning="true"
+         stopOnFailure="true"
+         stopOnError="true">
     <php>
         <env name="APP_ENV" value="test" force="true" />
         <env name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/test_data.db" force="true" />

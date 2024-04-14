@@ -40,11 +40,14 @@ class TransactionControllerTest extends WebTestCase
 
         $commonUser = new CommonUser('Common user', new CPF('12345678910'), 'common@example.org', '12345678');
         $commonUser->deposit(300_00);
+
         $merchantUser = new MerchantUser('Merchant user', new CNPJ('12345678000190'), 'merchant@example.org', '123456');
+
         /** @var EntityManagerInterface $entityManager */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
         /** @var UserRepository&EntityRepository<User> $userRepository */
         $userRepository = $entityManager->getRepository(User::class);
+
         $transactionRepository = $entityManager->getRepository(Transaction::class);
 
         $userRepository->save($commonUser);
@@ -62,8 +65,8 @@ class TransactionControllerTest extends WebTestCase
         // Act
         $kernelBrowser->jsonRequest('POST', '/transaction', [
             "value" => 100_00,
-            "payer" => $commonUser->id,
-            "payee" => $merchantUser->id
+            "payer" => (string) $commonUser->id,
+            "payee" => (string) $merchantUser->id
         ]);
 
         // Assert

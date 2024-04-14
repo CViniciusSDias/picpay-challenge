@@ -8,7 +8,7 @@ interface UserRepository
 {
 
     /**
-     * @param string[] $ids ULIDs as strings
+     * @param string[] $ids List of ULIDs as strings
      * @return array<string, User> User list with the ULID (as string) being the key
      */
     public function findUsersByIds(array $ids): array;
