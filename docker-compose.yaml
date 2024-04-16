@@ -1,7 +1,10 @@
-version: '3'
+version: '3.9'
 services:
     app: &app_service
-        build: .
+        build:
+            context: .
+            dockerfile: swoole.dockerfile
+            target: dev
         volumes:
             - ./:/app
         environment:
@@ -12,12 +15,24 @@ services:
             SWOOLE_PORT: "8000"
         depends_on:
             - db
+    fpm:
+        build:
+            context: .
+            dockerfile: fpm.dockerfile
+            target: dev
+        volumes:
+            - ./:/app
+            - ./fpm.ini:/usr/local/etc/php-fpm.d/zz-app.conf
+        environment:
+            DATABASE_URL: "postgresql://db_user:fake_password@db:5432/picpay?serverVersion=16&charset=utf8"
+            APP_ENV: dev
     web:
         image: nginx:1.25-alpine
         volumes:
             - ./nginx.conf:/etc/nginx/conf.d/default.conf
         ports:
             - "8123:80"
+            - "8124:8080"
         depends_on:
             - app
     db:
