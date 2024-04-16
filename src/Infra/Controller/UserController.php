@@ -29,7 +29,7 @@ class UserController extends AbstractController
     #[Route('/users', name: 'app_get_user', methods: ['GET'], format: 'json')]
     public function allUsers(): JsonResponse
     {
-        return $this->json($this->entityManager->getRepository(User::class)->findAll());
+        return $this->json($this->userRepository->findAll());
     }
 
     #[Route('/users', name: 'app_create_user', methods: ['POST'], format: 'json')]
