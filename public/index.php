@@ -6,7 +6,7 @@ require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
 $_SERVER['APP_RUNTIME_OPTIONS'] = [
     'settings' => [
-        'hook_flags' => SWOOLE_HOOK_ALL,
+        'hook_flags' => SWOOLE_HOOK_ALL & ~SWOOLE_HOOK_FILE & ~SWOOLE_HOOK_STDIO,
     ],
 ];
 return function (array $context) {
