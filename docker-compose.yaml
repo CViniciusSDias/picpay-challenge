@@ -23,6 +23,7 @@ services:
         volumes:
             - ./:/app
             - ./fpm.ini:/usr/local/etc/php-fpm.d/zz-app.conf
+            - ./php.ini:/usr/local/etc/php/conf.d/prod.ini
         environment:
             DATABASE_URL: "postgresql://db_user:fake_password@db:5432/picpay?serverVersion=16&charset=utf8"
             APP_ENV: dev
