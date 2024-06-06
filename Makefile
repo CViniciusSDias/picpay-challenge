@@ -1,4 +1,4 @@
-.PHONY: start test stop stan
+.PHONY: start migrate-test test stop infection stan
 
 start:
 	docker run --rm -itv $(shell pwd):/app -w /app composer:2.7.2 composer install --ignore-platform-reqs

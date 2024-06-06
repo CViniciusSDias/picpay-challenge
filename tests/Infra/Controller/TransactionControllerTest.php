@@ -10,26 +10,13 @@ use App\Domain\User\Document\CPF;
 use App\Domain\User\MerchantUser;
 use App\Domain\User\User;
 use App\Domain\User\UserRepository;
-use App\Infra\Controller\TransactionController;
-use App\Infra\Persistence\DoctrineTransactionalSession;
-use App\Infra\Persistence\DocumentType;
-use App\Infra\Transaction\DoctrineTransactionRepository;
-use App\Infra\User\DoctrineUserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
-#[
-    CoversClass(TransactionController::class),
-    CoversClass(DoctrineTransactionalSession::class),
-    CoversClass(DoctrineTransactionRepository::class),
-    CoversClass(DoctrineUserRepository::class),
-    CoversClass(DocumentType::class),
-]
 class TransactionControllerTest extends WebTestCase
 {
     #[Test]
