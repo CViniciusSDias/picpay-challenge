@@ -1,4 +1,3 @@
-version: '3.9'
 services:
     app: &app_service
         build:
@@ -48,5 +47,16 @@ services:
         <<: *app_service
         command: ["php", "bin/console", "doctrine:migrations:migrate", "--no-interaction"]
         restart: on-failure
+    wrk:
+        container_name: "benchmark_tool"
+        image: williamyeh/wrk
+        volumes:
+            - ./bench.sh:/app/bench.sh
+        working_dir: /app
+        entrypoint: /app/bench.sh
+        depends_on:
+            - fpm
+            - app
+        restart: no
 volumes:
     database_data:
