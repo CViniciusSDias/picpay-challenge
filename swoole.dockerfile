@@ -1,6 +1,6 @@
 FROM php:8.3-cli as base
 
-RUN apt update && apt install -y libpq-dev && docker-php-ext-install pdo_pgsql && docker-php-ext-enable pdo_pgsql
+RUN apt update && apt install -y libpq-dev libbrotli-dev && docker-php-ext-install pdo_pgsql && docker-php-ext-enable pdo_pgsql
 RUN pecl install swoole && docker-php-ext-enable swoole
 
 WORKDIR /app
